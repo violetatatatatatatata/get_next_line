@@ -6,37 +6,11 @@
 /*   By: avelandr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:28:18 by avelandr          #+#    #+#             */
-/*   Updated: 2025/02/26 03:34:38 by avelandr         ###   ########.fr       */
+/*   Updated: 2025/03/05 15:31:24 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t			src_len;
-	size_t			i;
-	unsigned char	*dst_aux;
-	unsigned char	*src_aux;
-
-	src_len = 0;
-	i = 0;
-	dst_aux = (unsigned char *) dst;
-	src_aux = (unsigned char *) src;
-	if (!dst || !src)
-		return (0);
-	while (src_aux[src_len] != '\0')
-		src_len++;
-	if (size == 0)
-		return (src_len);
-	while (i < (size - 1) && src_aux[i] != '\0')
-	{
-		dst_aux[i] = src[i];
-		i++;
-	}
-	dst_aux[i] = '\0';
-	return (src_len);
-}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -91,21 +65,6 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	*ft_memset(void *b, int c, size_t len)
-{
-	size_t			i;
-	unsigned char	*ptr;
-
-	ptr = (unsigned char *)b;
-	i = 0;
-	while (i < len)
-	{
-		ptr[i] = (unsigned char)c;
-		i++;
-	}
-	return (b);
-}
-
 char	*ft_strchr(const char *s, int c)
 {
 	int	i;
@@ -120,4 +79,37 @@ char	*ft_strchr(const char *s, int c)
 	if (c == '\0')
 		return ((char *)&s[i]);
 	return (NULL);
+}
+
+/*
+La función ft_substr genera una subcadena (substring) de una cadena dada (s).
+Extrae una parte de la cadena, empezando en un índice específico (start) y con
+una longitud máxima (len).
+*/
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*subs;
+	char	*subsrtn;
+
+	if (!s)
+		return (NULL);
+	if (start >= ft_strlen(s))
+	{
+		subs = (char *)malloc(sizeof(char));
+		if (!subs)
+			return (NULL);
+		subs[0] = '\0';
+		return (subs);
+	}
+	if (ft_strlen(s) - start < len)
+		len = ft_strlen(s) - start;
+	subs = (char *)malloc((len + 1) * sizeof(char));
+	if (!subs)
+		return (NULL);
+	subsrtn = subs;
+	while (s[start] && len--)
+		*subs++ = s[start++];
+	*subs = '\0';
+	return (subsrtn);
 }
