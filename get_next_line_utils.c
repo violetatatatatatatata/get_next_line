@@ -6,7 +6,7 @@
 /*   By: avelandr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:28:18 by avelandr          #+#    #+#             */
-/*   Updated: 2025/03/05 15:31:24 by avelandr         ###   ########.fr       */
+/*   Updated: 2025/03/07 18:15:00 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,12 @@ char	*ft_strdup(char *s)
 	return (strdup);
 }
 
-size_t	ft_strlen(const char *s)
+unsigned long long	ft_strlen(const char *s)
 {
-	size_t	i;
+	unsigned long long	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (*s != '\0')
 	{
