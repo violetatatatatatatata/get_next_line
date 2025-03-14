@@ -5,51 +5,52 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: avelandr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 12:28:18 by avelandr          #+#    #+#             */
-/*   Updated: 2025/03/07 18:15:00 by avelandr         ###   ########.fr       */
+/*   Created: 2025/03/14 13:11:51 by avelandr          #+#    #+#             */
+/*   Updated: 2025/03/14 13:12:19 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char    *ft_strjoin(char *s1, char const *s2)
 {
-	char	*s3;
-	char	*s3rtn;
-	int		i;
-	int		j;
+	char    *s3;
+	size_t  len_s1;
+	size_t  len_s2;
 
-	s3 = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (s3 == NULL)
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
 		return (NULL);
-	s3rtn = s3;
-	i = 0;
-	j = 0;
-	while (s1[i] != '\0')
-		s3[j++] = s1[i++];
-	i = 0;
-	while (s2[i] != '\0')
-		s3[j++] = s2[i++];
-	s3[j] = '\0';
-	return (s3rtn);
+
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	s3 = (char *)malloc(len_s1 + len_s2 + 1);
+	if (!s3)
+		return (NULL);
+
+	ft_strlcpy(s3, s1, len_s1 + 1);
+	ft_strlcpy(s3 + len_s1, s2, len_s2 + 1);
+
+	if (s1)
+		free(s1);
+
+	return (s3);
 }
 
-char	*ft_strdup(char *s)
+char    *ft_strdup(const char *s)
 {
-	int		i;
-	char		*strdup;
+	char    *dup;
+	size_t  len;
 
-	i = 0;
-	strdup = (char *)malloc((ft_strlen(s) + 1));
-	if (!strdup)
+	if (!s)
 		return (NULL);
-	while (s[i] != '\0')
-	{
-		strdup[i] = s[i];
-		i++;
-	}
-	strdup[i] = '\0';
-	return (strdup);
+	len = ft_strlen(s);
+	dup = (char *)malloc(len + 1);
+	if (!dup)
+		return (NULL);
+	ft_strlcpy(dup, s, len + 1);
+	return (dup);
 }
 
 unsigned long long	ft_strlen(const char *s)
@@ -83,35 +84,47 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-/*
-La función ft_substr genera una subcadena (substring) de una cadena dada (s).
-Extrae una parte de la cadena, empezando en un índice específico (start) y con
-una longitud máxima (len).
-*/
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char    *ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*subs;
-	char	*subsrtn;
+	char    *subs;
+	size_t  s_len;
 
 	if (!s)
 		return (NULL);
-	if (start >= ft_strlen(s))
-	{
-		subs = (char *)malloc(sizeof(char));
-		if (!subs)
-			return (NULL);
-		subs[0] = '\0';
-		return (subs);
-	}
-	if (ft_strlen(s) - start < len)
-		len = ft_strlen(s) - start;
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (ft_strdup(""));
+	if (s_len - start < len)
+		len = s_len - start;
 	subs = (char *)malloc((len + 1) * sizeof(char));
 	if (!subs)
 		return (NULL);
-	subsrtn = subs;
-	while (s[start] && len--)
-		*subs++ = s[start++];
-	*subs = '\0';
-	return (subsrtn);
+	ft_strlcpy(subs, s + start, len + 1);
+	return (subs);
+}
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t			src_len;
+	size_t			i;
+	unsigned char	*dst_aux;
+	unsigned char	*src_aux;
+
+	src_len = 0;
+	i = 0;
+	dst_aux = (unsigned char *) dst;
+	src_aux = (unsigned char *) src;
+	if (!dst || !src)
+		return (0);
+	while (src_aux[src_len] != '\0')
+		src_len++;
+	if (size == 0)
+		return (src_len);
+	while (i < (size - 1) && src_aux[i] != '\0')
+	{
+		dst_aux[i] = src[i];
+		i++;
+	}
+	dst_aux[i] = '\0';
+	return (src_len);
 }
