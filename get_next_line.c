@@ -6,118 +6,130 @@
 /*   By: avelandr <avelandr@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 01:25:20 by avelandr          #+#    #+#             */
-/*   Updated: 2025/03/16 17:55:03 by avelandr         ###   ########.fr       */
+/*   Updated: 2025/03/23 14:59:27 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	update_cache(char **cache, char *buffer, int fd)
+char	*update_cache(char *cache, char *buffer)
 {
-	char	*temp;
-	int		leido;
+	char	*new_cache;
 
-	if (!*cache)
-		*cache = ft_strdup("");
-	leido = read(fd, buffer, BUFFER_SIZE);
-	if (leido <= 0)
-		return (leido);
-	buffer[leido] = '\0';
-	temp = ft_strjoin(*cache, buffer);
-	if (!temp)
-		return (-1);
-	free(*cache);
-	*cache = temp;
-	return (ft_strchr(*cache, '\n') != NULL);
+	if (!cache)
+		return (ft_strdup(buffer));
+	new_cache = ft_strjoin(cache, buffer);
+	return (new_cache);
 }
 
 char	*extract_line(char **cache)
 {
-	char	*new_line;
-	char	*linea;
-	char	*aux;
-	size_t	len;
+	char			*new_line;
+	char			*linea;
+	char			*aux;
+	unsigned int	len;
 
+	if (!cache || !*cache)
+		return (NULL);
 	new_line = ft_strchr(*cache, '\n');
 	if (!new_line)
 		return (NULL);
-	len = new_line - *cache + 1;
-	linea = ft_substr(*cache, 0, len);
+	linea = ft_substr(*cache, 0, new_line - *cache + 1);
 	if (!linea)
 		return (NULL);
-	len = ft_strlen(*cache) - len;
+	len = (unsigned int)ft_strlen(*cache) - (new_line - *cache + 1);
 	if (len > 0)
 	{
 		aux = ft_substr(*cache, new_line - *cache + 1, len);
-		free(*cache);
-		*cache = aux;
+		if (!aux)
+		{
+			free(*cache);
+			*cache = NULL;
+			return (NULL);
+		}
 	}
 	else
-	{
-		free(*cache);
-		*cache = NULL;
-	}
+		aux = NULL;
+	free(*cache);
+	*cache = aux;
 	return (linea);
 }
 
-char	*handle_eof(char **cache, char *buffer)
+char	*handle_eof(char **cache)
 {
 	char	*linea;
 
-	if (buffer)
-		free(buffer);
 	if (!*cache || **cache == '\0')
 	{
-		if (*cache)
-			free(*cache);
+		free(*cache);
 		*cache = NULL;
 		return (NULL);
 	}
 	linea = ft_strdup(*cache);
+	if (!linea)
+	{
+		free(*cache);
+		*cache = NULL;
+		return (NULL);
+	}
 	free(*cache);
 	*cache = NULL;
 	return (linea);
 }
 
-int	read_and_update_cache(char **cache, char *buffer, int fd)
+int	is_new_line(char *cache)
 {
-	int	result;
+	char	*line;
 
-	result = update_cache(cache, buffer, fd);
-	if (result == -1)
-	{
-		free(buffer);
-		if (*cache)
-		{
-			free(*cache);
-			*cache = NULL;
-		}
-	}
-	return (result);
+	if (!cache)
+		return (0);
+	line = ft_strchr(cache, '\n');
+	if (!line)
+		return (0);
+	return (1);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*cache;
 	char		*texto;
-	int			result;
+	char		*linea;
+	int			leido;
+	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (handle_eof(&cache, NULL));
+	{
+		if (cache)
+		{
+			free(cache);
+			cache = NULL;
+		}
+		return (NULL);
+	}
 	texto = (char *)malloc(BUFFER_SIZE + 1);
 	if (!texto)
 		return (NULL);
-	while (1)
+	while (!is_new_line(cache))
 	{
-		result = read_and_update_cache(&cache, texto, fd);
-		if (result == -1)
-			return (NULL);
-		if (result == 1)
+		if (!cache)
+			cache = ft_strdup("");
+		leido = read(fd, texto, BUFFER_SIZE);
+		if (leido <= 0)
 		{
 			free(texto);
-			return (extract_line(&cache));
+			return (handle_eof(&cache));
 		}
-		if (result == 0)
-			return (handle_eof(&cache, texto));
+		texto[leido] = '\0';
+		temp = update_cache(cache, texto);
+		if (!temp)
+		{
+			free(texto);
+			free(cache);
+			return (NULL);
+		}
+		cache = temp;
 	}
+	free(texto);
+	linea = extract_line(&cache);
+	return (linea);
 }
