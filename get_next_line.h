@@ -6,7 +6,7 @@
 /*   By: avelandr <avelandr@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 15:26:28 by avelandr          #+#    #+#             */
-/*   Updated: 2025/03/23 14:58:20 by avelandr         ###   ########.fr       */
+/*   Updated: 2025/03/26 17:25:38 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <fcntl.h>
 
 char				*ft_strdup(const char *s);
-char				*ft_strjoin(char *s1, char const *s2);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);
 char				*ft_strchr(const char *s, int c);
 unsigned long long	ft_strlen(const char *s);
