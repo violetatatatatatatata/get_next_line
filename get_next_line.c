@@ -6,7 +6,7 @@
 /*   By: avelandr <avelandr@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 01:25:20 by avelandr          #+#    #+#             */
-/*   Updated: 2025/03/23 14:59:27 by avelandr         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:33:59 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,21 @@
 char	*update_cache(char *cache, char *buffer)
 {
 	char	*new_cache;
+	size_t	len_cache;
+	size_t	len_buffer;
 
 	if (!cache)
 		return (ft_strdup(buffer));
-	new_cache = ft_strjoin(cache, buffer);
+	if (!buffer)
+		return (NULL);
+	len_cache = ft_strlen(cache);
+	len_buffer = ft_strlen(buffer);
+	new_cache = (char *)malloc(len_cache + len_buffer + 1);
+	if (!new_cache)
+		return (NULL);
+	ft_strlcpy(new_cache, cache, len_cache + 1);
+	ft_strlcpy(new_cache + len_cache, buffer, len_buffer + 1);
+	free(cache);
 	return (new_cache);
 }
 
@@ -100,10 +111,8 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
 		if (cache)
-		{
 			free(cache);
-			cache = NULL;
-		}
+		cache = NULL;
 		return (NULL);
 	}
 	texto = (char *)malloc(BUFFER_SIZE + 1);
