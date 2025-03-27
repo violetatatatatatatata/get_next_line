@@ -6,7 +6,7 @@
 /*   By: avelandr <avelandr@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 01:25:20 by avelandr          #+#    #+#             */
-/*   Updated: 2025/03/26 17:44:32 by avelandr         ###   ########.fr       */
+/*   Updated: 2025/03/27 21:25:27 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*extract_line(char **cache)
 	*cache = aux;
 	return (linea);
 }
-// recortable
+
 char	*handle_eof(char **cache)
 {
 	char	*linea;
@@ -83,11 +83,11 @@ char	*handle_eof(char **cache)
 	*cache = NULL;
 	return (linea);
 }
-// revisar este monstruo
+
 char	*read_until_newline(int fd, char **cache, char *texto)
 {
 	int		leido;
-	char	*;
+	char	*aux;
 	char	*line;
 
 	while (1)
@@ -96,15 +96,15 @@ char	*read_until_newline(int fd, char **cache, char *texto)
 			*cache = ft_strdup("");
 		line = ft_strchr(*cache, '\n');
 		if (line)
-			break ;
+			return (NULL);
 		leido = read(fd, texto, BUFFER_SIZE);
 		if (leido <= 0)
 			return (handle_eof(cache));
 		texto[leido] = '\0';
-		 = update_cache(*cache, texto);
-		if (!)
+		aux = update_cache(*cache, texto);
+		if (!aux)
 			return (free(texto), free(*cache), NULL);
-		*cache = ;
+		*cache = aux;
 	}
 	return (NULL);
 }
