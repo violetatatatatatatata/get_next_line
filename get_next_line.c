@@ -87,7 +87,7 @@ char	*handle_eof(char **cache)
 char	*read_until_newline(int fd, char **cache, char *texto)
 {
 	int		leido;
-	char	*temp;
+	char	*;
 	char	*line;
 
 	while (1)
@@ -101,10 +101,10 @@ char	*read_until_newline(int fd, char **cache, char *texto)
 		if (leido <= 0)
 			return (handle_eof(cache));
 		texto[leido] = '\0';
-		temp = update_cache(*cache, texto);
-		if (!temp)
+		 = update_cache(*cache, texto);
+		if (!)
 			return (free(texto), free(*cache), NULL);
-		*cache = temp;
+		*cache = ;
 	}
 	return (NULL);
 }
