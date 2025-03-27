@@ -61,7 +61,7 @@ char	*extract_line(char **cache)
 	*cache = aux;
 	return (linea);
 }
-
+// recortable
 char	*handle_eof(char **cache)
 {
 	char	*linea;
@@ -83,7 +83,7 @@ char	*handle_eof(char **cache)
 	*cache = NULL;
 	return (linea);
 }
-
+// revisar este monstruo
 char	*read_until_newline(int fd, char **cache, char *texto)
 {
 	int		leido;
