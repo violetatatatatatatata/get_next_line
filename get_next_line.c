@@ -6,11 +6,22 @@
 /*   By: avelandr <avelandr@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 01:25:20 by avelandr          #+#    #+#             */
-/*   Updated: 2025/03/27 21:25:27 by avelandr         ###   ########.fr       */
+/*   Updated: 2025/03/27 22:14:28 by avelandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+/***************************************************************************
+	- Esta función toma dos cadenas, cache y buffer.
+	- Si cache es NULL, devuelve una copia de buffer.
+	- Si buffer es NULL, devuelve NULL.
+	- Calcula la longitud de cache y buffer.
+	- Reserva memoria para una nueva cadena que combine cache y buffer.
+	- Copia cache a la nueva cadena y luego añade buffer al final de la nueva
+	  cadena.
+	- Libera la memoria ocupada por cache y devuelve la nueva cadena combinada.
+***************************************************************************/
 
 char	*update_cache(char *cache, char *buffer)
 {
@@ -32,6 +43,18 @@ char	*update_cache(char *cache, char *buffer)
 	free(cache);
 	return (new_cache);
 }
+
+/***************************************************************************
+	Esta función toma un puntero a cache y extrae una línea que termina en \n.
+	Si cache o *cache es NULL, devuelve NULL.
+	Busca el carácter \n en *cache.
+	Si no encuentra \n, devuelve NULL.
+	Crea una subcadena desde el inicio de *cache hasta el carácter \n incluido.
+	Calcula la longitud restante en *cache después de la línea extraída.
+	Si hay contenido restante, crea una nueva subcadena con el contenido restante.
+	Libera la memoria de *cache y actualiza *cache con la nueva subcadena restante.
+	Devuelve la línea extraída.
+***************************************************************************/
 
 char	*extract_line(char **cache)
 {
@@ -62,6 +85,13 @@ char	*extract_line(char **cache)
 	return (linea);
 }
 
+/***************************************************************************
+	Esta función gestiona la situación de fin de archivo (EOF).
+	Si *cache es NULL o está vacía, libera *cache y devuelve NULL.
+	Si *cache tiene contenido, crea una copia de *cache y la devuelve.
+	Libera la memoria de *cache y la establece en NULL.
+***************************************************************************/
+
 char	*handle_eof(char **cache)
 {
 	char	*linea;
@@ -83,6 +113,15 @@ char	*handle_eof(char **cache)
 	*cache = NULL;
 	return (linea);
 }
+
+/***************************************************************************
+	Esta función lee desde un archivo hasta encontrar un \n.
+	En un bucle continuo, verifica si cache es NULL y la inicializa si es necesario.
+	Busca \n en *cache.
+	Si encuentra \n, devuelve NULL.
+	Lee desde el archivo y si la lectura es menor o igual a 0, gestiona EOF y devuelve NULL.
+	Añade el contenido leído a *cache usando update_cache.
+***************************************************************************/
 
 char	*read_until_newline(int fd, char **cache, char *texto)
 {
@@ -108,6 +147,17 @@ char	*read_until_newline(int fd, char **cache, char *texto)
 	}
 	return (NULL);
 }
+
+/***************************************************************************
+	Esta es la función principal que devuelve la siguiente línea de un archivo.
+	Verifica si el descriptor de archivo (fd) es válido y si BUFFER_SIZE es mayor que 0.
+	Si hay un cache previo, lo libera si es necesario.
+	Reserva memoria para texto con tamaño BUFFER_SIZE + 1.
+	Usa read_until_newline para leer el archivo hasta encontrar un \n.
+	Libera la memoria de texto.
+	Extrae una línea de cache usando extract_line.
+	Devuelve la línea extraída.
+***************************************************************************/
 
 char	*get_next_line(int fd)
 {
