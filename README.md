@@ -2,14 +2,13 @@
 
 ##   ¿Qué es esto?
 
-Este proyecto consiste en implementar la función `get_next_line`, que permite leer un archivo o entrada estándar línea a línea. Es un ejercicio clásico en C que ayuda a mejorar la gestión de memoria dinámica y el uso de variables estáticas.
+Este proyecto consiste en implementar la función `get_next_line`, que permite leer un archivo o entrada estándar línea a línea.
 
 ##   ¿Cómo funciona?
 
-Cada vez que llamas a `get_next_line(fd)`, la función lee del file descriptor (`fd`) y te devuelve una línea completa, incluyendo el salto de línea (`\n`). Internamente, mantiene una caché de datos leídos para optimizar el rendimiento y evitar lecturas innecesarias.
+`get_next_line(fd)`, la función lee del file descriptor (`fd`) y te devuelve una línea completa, incluyendo el salto de línea (`\n`). Internamente, mantiene una caché de datos leídos para optimizar el rendimiento y evitar lecturas innecesarias.
 
 - Si hay más contenido por leer, puedes seguir llamándola hasta obtener `NULL`, lo que indica el final del archivo o un error.
-- La implementación usa `read()`, `malloc()`, y `free()`, gestionando la memoria correctamente para evitar leaks.
 
 ##   Archivos
 
@@ -39,7 +38,7 @@ make re
 ```
 
 ### Tester para Get Next Line con Don Quijote
-Este tester evalúa exhaustivamente tu implementación de `get_next_line` utilizando la obra completa de *Don Quijote de la Mancha* como archivo de prueba. Está diseñado para verificar:
+Este tester evalúa exhaustivamente mi implementación de `get_next_line` utilizando la obra completa de *Don Quijote de la Mancha* como archivo de prueba. Está diseñado para verificar:
 
 - Manejo correcto de archivos muy grandes
 - Funcionamiento con diferentes tamaños de buffer
